@@ -20,7 +20,7 @@ TEMPLATES_PATH = (PROJECT_ROOT / TEMPLATES_DIR).resolve()
 
 DOTENV_FILE = Path(".env")
 DOTENV_FILE_PATH = (PROJECT_ROOT / DOTENV_FILE).resolve()
-FLASK_SECRET_KEY = dotenv_values(DOTENV_FILE_PATH).get("FLASK_SECRET_KEY", None)
+FLASK_SECRET_KEY = dotenv_values(DOTENV_FILE_PATH).get("FLASK_SECRET_KEY", "dev")
 OMDB_API_KEY = dotenv_values(DOTENV_FILE_PATH).get("OMDB_API_KEY", None)
 
 # Ensure .env exists and contains a secret key
