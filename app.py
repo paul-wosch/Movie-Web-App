@@ -57,8 +57,14 @@ def get_movies(user_id):
     Returns:
         Rendered HTML template 'movies.html' with user_id and movies context.
     """
+    user = data_manager.get_user(user_id)   # fetch the user
     movies = data_manager.get_movies(user_id)
-    return render_template('movies.html', user_id=user_id, movies=movies)
+    return render_template(
+        'movies.html',
+        user_id=user_id,
+        user_name=user.name,   # pass the name
+        movies=movies
+    )
 
 
 @app.route('/users/<int:user_id>/movies', methods=['POST'])
@@ -105,6 +111,36 @@ def delete_movie(user_id, movie_id):
     """
     data_manager.remove_movie_from_user(user_id, movie_id)
     return redirect(url_for('get_movies', user_id=user_id))
+
+
+@app.route('/users/<int:user_id>/movies/<int:movie_id>/update', methods=['POST'])
+def update_movie(user_id, movie_id):
+    """Update details of a movie in a user's collection.
+
+    Args:
+        user_id (int): ID of the user whose movie is being updated.
+        movie_id (int): ID of the movie to update.
+
+    Returns:
+        Response: Redirect to the user's movies page after updating the movie.
+    """
+    title = request.form.get("title")
+    director = request.form.get("director")
+    year = request.form.get("year")
+    poster_url = request.form.get("poster_url")
+
+    year_val = int(year) if year and year.isdigit() else None
+
+    data_manager.update_movie(
+        movie_id,
+        name=title,
+        director=director,
+        year=year_val,
+        poster_url=poster_url
+    )
+
+    return redirect(url_for('get_movies', user_id=user_id))
+
 
 
 def main():

@@ -35,6 +35,10 @@ class DataManager:
         """Return a list of all users."""
         return User.query.all()
 
+    def get_user(self, user_id):
+        """Return a single user."""
+        return User.query.get(user_id)
+
     def get_movies(self, user_id):
         """Return a list of movies for a given user.
 
@@ -70,6 +74,24 @@ class DataManager:
         if user and not user.movies.filter_by(id=movie.id).first():
             user.movies.append(movie)
             db.session.commit()
+
+    def update_movie(self, movie_id, name=None, director=None, year=None, poster_url=None):
+        """Update fields of a movie and commit changes."""
+        movie = Movie.query.get(movie_id)
+        if not movie:
+            return None
+
+        if name is not None:
+            movie.name = name
+        if director is not None:
+            movie.director = director
+        if year is not None:
+            movie.year = year
+        if poster_url is not None:
+            movie.poster_url = poster_url
+
+        db.session.commit()
+        return movie
 
     def remove_movie_from_user(self, user_id, movie_id):
         """Remove a movie from a user's favorites.
