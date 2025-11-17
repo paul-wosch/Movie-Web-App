@@ -1,10 +1,16 @@
 {%- extends "base.html" %}
 
 {%- block heading %}
-<h1>400 - Bad Request</h1>
+<h1 class="mb-4 text-center">400 - Bad Request</h1>
 {%- endblock %}
 
 {%- block content %}
-<p>The server could not understand your request.</p>
-<a href="{{ url_for('index') }}" class="back-link">&larr; Back to Home</a>
+<div class="d-flex justify-content-center">
+  <div class="card error-card shadow-sm">
+    <div class="card-body text-center">
+      <p>The server could not understand your request.</p>
+      <a href="{{ url_for('ind‚ex') }}" class="btn btn-primary mt-3">&larr; Back to Home</a>
+    </div>
+  </div>
+</div>
 {%- endblock %}

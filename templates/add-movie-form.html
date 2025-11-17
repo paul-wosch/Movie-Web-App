@@ -1,8 +1,16 @@
-<div class="form-section">
-  <h2>Add New Movie</h2>
-  <form action="{{ url_for('add_movie', user_id=user_id) }}" method="post">
-    <input type="text" name="title" placeholder="Movie title" required>
-    <input type="text" name="year" placeholder="Year (optional)">
-    <button type="submit" class="btn">Add Movie</button>
-  </form>
+<div class="card mb-4 shadow-sm">
+  <div class="card-body">
+    <h5 class="card-title mb-3">Add New Movie</h5>
+    <form action="{{ url_for('add_movie', user_id=user_id) }}" method="post" class="row g-3">
+      <div class="col-md-6">
+        <input type="text" class="form-control" name="title" placeholder="Movie title" required>
+      </div>
+      <div class="col-md-6">
+        <input type="text" class="form-control" name="year" placeholder="Year (optional)">
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Add Movie</button>
+      </div>
+    </form>
+  </div>
 </div>
