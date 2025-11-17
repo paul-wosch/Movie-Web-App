@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MoviWeb App</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {{ toastr.include_jquery() }}
+  {{ toastr.include_toastr_css() }}
+  {{ toastr.message() }}
+</head>
+<body>
+  {{ toastr.include_toastr_js() }}
+  <nav>
+    <div class="container">
+      <a href="{{ url_for('index') }}" class="logo">🎬 MoviWeb App</a>
+    </div>
+  </nav>
+  <main class="container">
+    {%- block nav %}{%- endblock %}
+    {%- block heading %}{%- endblock %}
+    {%- block content %}{%- endblock %}
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 MoviWeb App. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

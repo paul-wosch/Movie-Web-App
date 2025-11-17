@@ -1,22 +1,19 @@
 {%- extends "base.html" %}
 
 {%- block nav %}
-<a href="{{ url_for('index') }}" class="back-link">&larr; Back to Users</a>
-{%- endblock %}
+<a href="{{ url_for('get_movies', user_id=user_id) }}" class="back-link">&larr; Back to Movies</a>
+{% endblock %}
 
 {%- block heading %}
-<h1>Movies for {{ user_name }}</h1>
+<h1>Movie details</h1>
 {%- endblock %}
 
 {%- block content %}
 <div class="card-list">
-  {%- for movie in movies %}
   <div class="card">
   {%- include "movie-details.html" %}
   {%- include "update-button.html" %}
   {%- include "delete-button.html" %}
   </div>
-  {%- endfor %}
 </div>
-{%- include "add-movie-form.html" %}
-{%- endblock %}
+{% endblock %}

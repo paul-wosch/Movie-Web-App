@@ -1,0 +1,21 @@
+<form action="{{ url_for('update_movie', user_id=user_id, movie_id=movie.id) }}"
+      method="post"
+      class="movie-form-grid">
+
+  <label for="title">Title:</label>
+  <input type="text" id="title" name="title" value="{{ movie.name }}" required>
+
+  <label for="year">Year:</label>
+  <input type="text" id="year" name="year" value="{{ movie.year }}" placeholder="Year (optional)">
+
+  <label for="director">Director:</label>
+  <input type="text" id="director" name="director" value="{{ movie.director }}" placeholder="Director (optional)">
+
+  <label for="poster_url">Poster URL:</label>
+  <input type="text" id="poster_url" name="poster_url"
+         value="{{ movie.poster_url }}"
+         placeholder="Poster URL (optional)" readonly>
+
+  <div></div>  <!-- empty cell for alignment -->
+  <button type="submit" class="btn btn-small">Update</button>
+</form>

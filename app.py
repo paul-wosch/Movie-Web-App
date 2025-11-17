@@ -8,6 +8,7 @@ API, and remove movies from a user's collection. Uses SQLAlchemy for
 database interactions and DataManager for data operations.
 """
 from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_toastr import Toastr
 from data_manager import DataManager
 from models import db, Movie
 from api import fetch_omdb_by_title
@@ -21,6 +22,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = FLASK_SECRET_KEY
 db.init_app(app)
 data_manager = DataManager()
+
+toastr = Toastr(app)
 
 
 @app.route('/')
@@ -64,6 +67,40 @@ def get_movies(user_id):
         user_id=user_id,
         user_name=user.name,   # pass the name
         movies=movies
+    )
+
+
+@app.route('/users/<int:user_id>/movies/<int:movie_id>', methods=['GET'])
+def show_movie(user_id, movie_id):
+    """Display details for a movie associated with a specific user.
+
+    Ensures that the movie exists and is part of the user's collection.
+    Denies access if the movie does not belong to the given user.
+
+    Args:
+        user_id (int): ID of the user who owns the movie.
+        movie_id (int): ID of the movie to display.
+
+    Returns:
+        Rendered HTML template 'movie.html' with movie and user context.
+        Redirects to the user's movies page if the movie is not associated
+        with that user.
+    """
+    user = data_manager.get_user(user_id)
+    if not user:
+        flash("User not found.")
+        return redirect(url_for('index'))
+
+    movie = Movie.query.get(movie_id)
+    if not movie or movie not in user.movies:
+        flash("Movie not found for this user.")
+        return redirect(url_for('get_movies', user_id=user_id))
+
+    return render_template(
+        'movie.html',
+        user_id=user_id,
+        user_name=user.name,
+        movie=movie
     )
 
 
@@ -113,7 +150,7 @@ def delete_movie(user_id, movie_id):
     return redirect(url_for('get_movies', user_id=user_id))
 
 
-@app.route('/users/<int:user_id>/movies/<int:movie_id>/update', methods=['POST'])
+@app.route('/users/<int:user_id>/movies/<int:movie_id>/update', methods=['GET', 'POST'])
 def update_movie(user_id, movie_id):
     """Update details of a movie in a user's collection.
 
@@ -124,22 +161,40 @@ def update_movie(user_id, movie_id):
     Returns:
         Response: Redirect to the user's movies page after updating the movie.
     """
-    title = request.form.get("title")
-    director = request.form.get("director")
-    year = request.form.get("year")
-    poster_url = request.form.get("poster_url")
+    if request.method == 'POST':
+        title = request.form.get("title")
+        director = request.form.get("director")
+        year = request.form.get("year")
+        poster_url = request.form.get("poster_url")
 
-    year_val = int(year) if year and year.isdigit() else None
+        year_val = int(year) if year and year.isdigit() else None
 
-    data_manager.update_movie(
-        movie_id,
-        name=title,
-        director=director,
-        year=year_val,
-        poster_url=poster_url
+        data_manager.update_movie(
+            movie_id,
+            name=title,
+            director=director,
+            year=year_val,
+            poster_url=poster_url
+        )
+
+        return redirect(url_for('get_movies', user_id=user_id))
+
+    user = data_manager.get_user(user_id)
+    if not user:
+        flash("User not found.")
+        return redirect(url_for('index'))
+
+    movie = Movie.query.get(movie_id)
+    if not movie or movie not in user.movies:
+        flash("Movie not found for this user.")
+        return redirect(url_for('get_movies', user_id=user_id))
+
+    return render_template(
+        'update-movie.html',
+        user_id=user_id,
+        user_name=user.name,
+        movie=movie
     )
-
-    return redirect(url_for('get_movies', user_id=user_id))
 
 
 

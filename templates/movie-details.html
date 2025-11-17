@@ -1,0 +1,9 @@
+<h3><a href="{{ url_for('show_movie', user_id=user_id, movie_id=movie.id) }}" class="movie-title">{{ movie.name }}</a></h3>
+{%- if movie.poster_url %}
+<img src="{{ movie.poster_url }}" alt="Poster for {{ movie.name }}" class="movie-poster">
+{%- else %}
+<img src="{{ url_for('static', filename='default-poster.png') }}" alt="No poster available" class="movie-poster">
+{%- endif %}
+<div><strong>Title:</strong> {{ movie.name }}</div>
+{%- if movie.year %}<div><strong>Year:</strong> {{ movie.year }}</div>{%- endif %}
+{%- if movie.director %}<div><strong>Director:</strong> {{ movie.director }}</div>{%- endif %}
