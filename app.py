@@ -197,6 +197,36 @@ def update_movie(user_id, movie_id):
     )
 
 
+# -------------------
+# Custom Error Pages
+# -------------------
+@app.errorhandler(400)
+def bad_request(error):
+    """Render a custom 400 error page for bad requests."""
+    flash("Bad request. The server could not process your request.", "error")
+    return render_template('errors/400.html', error=error), 400
+
+
+@app.errorhandler(403)
+def forbidden(error):
+    """Render a custom 403 error page for forbidden access."""
+    flash("Forbidden. You don't have permission to access this page.", "error")
+    return render_template('errors/403.html', error=error), 403
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    """Render a custom 404 error page when a route is not found."""
+    flash("Page not found.", "error")
+    return render_template('errors/404.html', error=error), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    """Render a custom 500 error page for internal server errors."""
+    flash("Internal server error occurred.", "error")
+    return render_template('errors/500.html', error=error), 500
+
 
 def main():
     """Initialize the database and start the Flask development server."""
