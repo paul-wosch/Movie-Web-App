@@ -35,8 +35,11 @@ class DataManager:
         """Return a list of all users."""
         return User.query.all()
 
-    def get_user(self, user_id):
+    def get_user(self, user_id=None, name=None):
         """Return a single user."""
+        if user_id is None:
+            user = User.query.filter_by(name=name).first()
+            return user
         return User.query.get(user_id)
 
     def get_movies(self, user_id):

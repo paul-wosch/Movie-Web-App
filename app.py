@@ -45,9 +45,15 @@ def create_user():
     Returns:
         Redirect to the index page.
     """
-    name = request.form.get("name")
-    if name:
-        data_manager.create_user(name)
+    name = request.form.get("name").strip()
+    name_to_check = data_manager.get_user(name=name)
+    if name is None:
+        flash("Please provide a name.")
+        return redirect(url_for('index'))
+    if name_to_check and name == data_manager.get_user(name=name).name:
+        flash("User with that name already exists.")
+        return redirect(url_for('index'))
+    data_manager.create_user(name)
     return redirect(url_for('index'))
 
 
@@ -181,10 +187,10 @@ def update_movie(user_id, movie_id):
         Response: Redirect to the user's movies page after updating the movie.
     """
     if request.method == 'POST':
-        title = request.form.get("title")
-        director = request.form.get("director")
-        year = request.form.get("year")
-        poster_url = request.form.get("poster_url")
+        title = request.form.get("title").strip()
+        director = request.form.get("director").strip()
+        year = request.form.get("year").strip()
+        poster_url = request.form.get("poster_url").strip()
 
         year_val = int(year) if year and year.isdigit() else None
 
