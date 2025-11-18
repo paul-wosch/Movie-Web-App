@@ -23,22 +23,23 @@ DOTENV_FILE_PATH = (PROJECT_ROOT / DOTENV_FILE).resolve()
 FLASK_SECRET_KEY = dotenv_values(DOTENV_FILE_PATH).get("FLASK_SECRET_KEY", None)
 OMDB_API_KEY = dotenv_values(DOTENV_FILE_PATH).get("OMDB_API_KEY", None)
 
-# Ensure .env exists and contains a secret key
-if not FLASK_SECRET_KEY:  # covers None and ""
+# Ensure .env exists
+if not DOTENV_FILE_PATH.exists():
+    DOTENV_FILE_PATH.touch()
+
+# If no secret key, generate and persist it
+if not FLASK_SECRET_KEY:
     FLASK_SECRET_KEY = secrets.token_hex(16)
-    # Ensure file exists
-    if not DOTENV_FILE_PATH.exists():
-        DOTENV_FILE_PATH.touch()
-    # Update or append the key line
     lines = []
-    if DOTENV_FILE_PATH.read_text(encoding="utf-8").strip():
-        # Replace existing empty line if present
-        for line in DOTENV_FILE_PATH.read_text(encoding="utf-8").splitlines():
-            if line.startswith("FLASK_SECRET_KEY="):
-                lines.append(f"FLASK_SECRET_KEY={FLASK_SECRET_KEY}")
-            else:
-                lines.append(line)
-    else:
+    found_key = False
+    for line in DOTENV_FILE_PATH.read_text(encoding="utf-8").splitlines():
+        if line.startswith("FLASK_SECRET_KEY="):
+            lines.append(f"FLASK_SECRET_KEY={FLASK_SECRET_KEY}")
+            found_key = True
+        else:
+            lines.append(line)
+    if not found_key:
+        # Append new key if not present
         lines.append(f"FLASK_SECRET_KEY={FLASK_SECRET_KEY}")
     DOTENV_FILE_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
