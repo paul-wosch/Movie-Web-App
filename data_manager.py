@@ -77,6 +77,8 @@ class DataManager:
 
     def update_movie(self, movie_id, name=None, director=None, year=None, poster_url=None):
         """Update fields of a movie and commit changes."""
+        # pylint: disable=too-many-arguments, too-many-positional-arguments
+        # All arguments are necessary to update a movie
         movie = Movie.query.get(movie_id)
         if not movie:
             return None

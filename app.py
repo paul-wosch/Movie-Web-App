@@ -9,6 +9,7 @@ database interactions and DataManager for data operations.
 """
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_toastr import Toastr
+import requests
 from data_manager import DataManager
 from models import db, Movie
 from api import fetch_omdb_by_title
@@ -123,13 +124,31 @@ def add_movie(user_id):
         return redirect(url_for('get_movies', user_id=user_id))
     try:
         meta = fetch_omdb_by_title(title)
-    except Exception as e:
-        flash(str(e))
+    except ValueError as e:
+        # Movie not found or OMDB returned an error
+        flash(f"OMDB error: {e}")
+        return redirect(url_for('get_movies', user_id=user_id))
+    except requests.HTTPError as e:
+        # Non-200 HTTP status codes
+        flash(f"HTTP error: {e}")
+        return redirect(url_for('get_movies', user_id=user_id))
+    except requests.Timeout:
+        flash("Request to OMDB timed out. Please try again later.")
+        return redirect(url_for('get_movies', user_id=user_id))
+    except requests.ConnectionError:
+        flash("Network connection error while contacting OMDB.")
         return redirect(url_for('get_movies', user_id=user_id))
 
     movie = (
-        data_manager.get_movie_by_title_and_director(meta["name"], meta["director"], meta["year"])
-        or data_manager.create_movie(meta["name"], meta["director"], meta["year"], meta["poster_url"])
+        data_manager.get_movie_by_title_and_director(meta["name"],
+                                                     meta["director"],
+                                                     meta["year"]
+                                                     )
+        or data_manager.create_movie(meta["name"],
+                                     meta["director"],
+                                     meta["year"],
+                                     meta["poster_url"]
+                                     )
     )
     data_manager.add_movie_to_user(user_id, movie)
     return redirect(url_for('get_movies', user_id=user_id))

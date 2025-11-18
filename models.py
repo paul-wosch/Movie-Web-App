@@ -31,6 +31,17 @@ class Favorites(db.Model):
         doc="Foreign key referencing Movie.id"
     )
 
+    def __repr__(self):
+        """Return a string representation of the Favorites association.
+
+        Shows the linked user_id and movie_id for debugging and logging.
+        """
+        return f"<Favorites user_id={self.user_id} movie_id={self.movie_id}>"
+
+    def __str__(self):
+        """Return a human-readable description of the Favorites association."""
+        return f"User {self.user_id} favorited Movie {self.movie_id}"
+
 
 class User(db.Model):
     """Represents a user of the application.
@@ -64,6 +75,17 @@ class User(db.Model):
             "Back-populates 'users' on Movie model."
         )
     )
+
+    def __repr__(self):
+        """Return a string representation of the User instance.
+
+        Includes the user's id and name for easier debugging and logging.
+        """
+        return f"<User id={self.id} name='{self.name}'>"
+
+    def __str__(self):
+        """Return a human-readable description of the User instance."""
+        return f"User {self.name} (ID: {self.id})"
 
 
 class Movie(db.Model):
@@ -113,3 +135,18 @@ class Movie(db.Model):
             "Back-populates 'movies' on User model."
         )
     )
+
+    def __repr__(self):
+        """Return a string representation of the Movie instance.
+
+        Includes the movie's id, name, and year for debugging and logging.
+        """
+        return f"<Movie id={self.id} name='{self.name}' year={self.year}>"
+
+    def __str__(self):
+        """Return a human-readable description of the Movie instance."""
+        if self.year and self.director:
+            return f"'{self.name}' ({self.year}), directed by {self.director}"
+        if self.year:
+            return f"'{self.name}' ({self.year})"
+        return f"'{self.name}'"
