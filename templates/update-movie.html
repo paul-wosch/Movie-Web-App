@@ -1,0 +1,18 @@
+{%- extends "base.html" %}
+
+{%- block nav %}
+<a href="{{ url_for('get_movies', user_id=user_id) }}" class="btn btn-link mb-3">&larr; Back to Movies</a>
+{%- endblock %}
+
+{%- block heading %}
+<h1 class="mb-4">Update Movie Details</h1>
+{%- endblock %}
+
+{%- block content %}
+<div class="card shadow-sm single-movie-card">
+  <div class="card-body">
+    {%- include "movie-details.html" %}
+    {%- include "update-movie-form.html" %}
+  </div>
+</div>
+{%- endblock %}

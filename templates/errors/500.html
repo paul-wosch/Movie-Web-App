@@ -1,0 +1,16 @@
+{%- extends "base.html" %}
+
+{%- block heading %}
+<h1 class="mb-4 text-center">500 - Internal Server Error</h1>
+{%- endblock %}
+
+{%- block content %}
+<div class="d-flex justify-content-center">
+  <div class="card error-card shadow-sm">
+    <div class="card-body text-center">
+      <p>Oops! Something went wrong on the server.</p>
+      <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">&larr; Back to Home</a>
+    </div>
+  </div>
+</div>
+{%- endblock %}

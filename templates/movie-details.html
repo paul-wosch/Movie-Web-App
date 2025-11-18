@@ -1,0 +1,15 @@
+<h5 class="card-title movie-title">
+  <a href="{{ url_for('show_movie', user_id=user_id, movie_id=movie.id) }}" class="text-decoration-none">
+    {{ movie.name }}
+  </a>
+</h5>
+{%- if movie.poster_url %}
+<img src="{{ movie.poster_url }}" alt="Poster for {{ movie.name }}" class="movie-poster mb-2">
+{%- else %}
+<img src="{{ url_for('static', filename='default-poster.png') }}" alt="No poster available" class="movie-poster mb-2">
+{%- endif %}
+<ul class="list-unstyled mb-0">
+  <li><strong>Title:</strong> {{ movie.name }}</li>
+  {%- if movie.year %}<li><strong>Year:</strong> {{ movie.year }}</li>{%- endif %}
+  {%- if movie.director %}<li><strong>Director:</strong> {{ movie.director }}</li>{%- endif %}
+</ul>
